@@ -6,3 +6,4 @@
 2. git操作
 3. npm管理
 4. mongodb
+5. 以下为练习git操作
