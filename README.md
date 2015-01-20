@@ -1,5 +1,5 @@
 # node-blog
-参照nodejs实战与https://github.com/nswbmw/N-blog的项目进行nodejs练习
+参照《nodejs实战》与https://github.com/nswbmw/N-blog的项目进行nodejs练习
 
 
 **主要学习**
