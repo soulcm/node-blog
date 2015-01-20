@@ -11,14 +11,27 @@ var MongoStore = require('connect-mongo')(session);
 var routes = require('./routes/index');
 var settings = require('./settings');
 var flash = require('connect-flash');
+var multer = require('multer');
 // var users = require('./routes/users');
-
+var fs = require('fs');
+var accessLog = fs.createWriteStream('access.log', {
+    flags: 'a'
+});
+var errorLog = fs.createWriteStream('error.log', {
+    flags: 'a'
+});
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs'); //ejs
 app.use(flash());
+app.use(multer({
+    dest: './public/images',
+    rename: function(fieldname, filename) {
+        return filename;
+    }
+}));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -29,6 +42,12 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'))); //静态文件
+
+app.use(function(err, req, res, next) {
+    var meta = '[' + new Date() + '] ' + req.url + '\n';
+    errorLog.write(meta + err.stack + '\n');
+    next();
+});
 
 app.use(session({
     secret: settings.cookieSecret,
@@ -51,7 +70,6 @@ routes(app);
 app.listen(app.get('port'), function() {
     console.log('Express server listening on port ' + app.get('port'));
 });
-
 
 
 
